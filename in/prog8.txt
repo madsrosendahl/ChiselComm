@@ -1,0 +1,31 @@
+val sender = Module(Sender)
+val receiver = Module(Receiver)
+sender.out <> receiver.in
+
+module Sender
+int i
+outstream out
+state 1
+i = 0
+goto 2
+state 2 when out.ready()
+out.write(i)
+i = i + 1
+goto Mux(i < 5, 2, 3)
+state 3
+goto 3
+
+module Receiver
+int x, j
+instream in
+state 1
+j = 0
+goto 2
+state 2 when in.valid()
+x = in.read()
+goto 3
+state 3
+j = j + x
+goto Mux(x < 5, 2, 4)
+state 4
+goto 4

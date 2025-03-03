@@ -1,0 +1,71 @@
+val sender = Module(Sender)
+val receiver = Module(Receiver)
+val middle = Module(Middle)
+sender.out <> middle.in
+middle.out <> receiver.in
+
+module Sender
+int i,x
+outstream out
+state 1
+i = 0
+goto 5
+
+state 5
+x = ((83*i)+52)%101
+i = i + 1
+goto 2
+
+state 2 when out.ready()
+out.write(x)
+goto Mux(i < 10, 5, 3)
+
+state 3
+goto 3
+
+
+module Middle
+int x, i
+instream in
+outstream out
+state 1
+goto 2
+
+state 2 when in.valid()
+x = in.read()
+i = i+1
+//goto 3
+goto 5
+
+state 5 when out.ready()
+out.write(x)
+goto 2
+
+state 3
+goto Mux(i < 10, 2, 4)
+
+state 4
+goto 4
+
+
+
+module Receiver
+int x,  i
+int[10] data
+instream in
+
+state 1
+i = 0
+goto 2
+
+state 2 when in.valid()
+x = in.read()
+i = i+1
+goto 3
+
+state 3
+data[i-1]=x
+goto Mux(i < 10, 2, 4)
+
+state 4
+goto 4

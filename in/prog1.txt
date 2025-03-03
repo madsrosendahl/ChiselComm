@@ -1,0 +1,19 @@
+val prog = Module(Prog)
+module Prog
+int i, j, k
+state 1
+i = 15
+j = 1
+goto 2
+
+state 2
+i = i - 1
+j = j + 1
+goto 3
+
+state 3
+goto Mux(i > j, 2, 4)
+
+state 4
+k = 1
+goto 4

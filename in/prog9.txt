@@ -1,0 +1,28 @@
+val range = Module(Range)
+
+module Range
+int x
+int i
+int j
+int[6] a
+state 1
+i = 0
+j = 0
+x = 0
+goto 2
+state 2
+a[i] = i
+i = i + 1
+goto Mux(i < 5, 2, 3)
+state 3
+i = i - 1
+goto 4
+state 4
+x = a[i]
+i = i - 1
+goto Mux(i > 0, 5, 6)
+state 5
+j = j + x
+goto 4
+state 6
+goto 6

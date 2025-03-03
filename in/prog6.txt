@@ -1,0 +1,30 @@
+val random = Module(Random6)
+
+module Random6
+int x, i, k, r
+int[11] a
+
+state 1
+  i = 0
+  goto 2
+state 2
+  x = (83 * i) + 52
+  goto 3
+state 3
+  x = x % 101
+  goto 4
+state 4
+  a[i] = x
+  i = i + 1
+  goto Mux(i < 10, 2, 5)
+state 5
+  i = 1
+  r = a[0]
+  goto 6
+state 6
+  k = k + r
+  r = a[i]
+  i = i + 1
+  goto Mux(i < 10, 6, 7)
+state 7
+  goto 7

@@ -1,0 +1,190 @@
+val sender = Module(Sender)
+val receiver = Module(Receiver)
+//val middle = Module(Middle)
+val middle = Module(Heap1)
+sender.out <> middle.in
+middle.out <> receiver.in
+
+module Sender
+int i,x
+outstream out
+state 1
+i = 0
+goto 5
+
+state 5
+x = ((83*i)+52)%101
+i = i + 1
+goto 2
+
+state 2 when out.ready()
+out.write(x)
+goto Mux(i < 10, 5, 3)
+
+state 3
+goto 3
+
+
+
+module Receiver
+int x,  i
+int[10] data
+instream in
+
+state 1
+i = 0
+goto 2
+
+state 2 when in.valid()
+x = in.read()
+i = i+1
+goto 3
+
+state 3
+data[i-1]=x
+goto Mux(i < 10, 2, 4)
+
+state 4
+goto 4
+
+
+module Middle
+int x, i
+instream in
+state 1
+goto 2
+
+state 2 when in.valid()
+x = in.read()
+i = i+1
+//goto 3
+goto 5
+
+state 5 when out.ready()
+out.write(x)
+goto 2
+
+state 3
+goto Mux(i < 10, 2, 4)
+
+state 4
+goto 4
+
+
+
+module Heap1
+
+int[10] heap
+int size = 0
+int ii = 0
+int xi,xj,xk,xx,j,x,i
+instream in
+outstream out
+
+
+
+//------------------------------------------
+// insert into heap
+state 1 //1000 // 1
+//xi = ((83 * ii) + 52) % 101
+ii=ii+1
+goto Mux(ii < 10,3,10)
+
+state 3 when in.valid()
+xi = in.read()
+goto 2
+
+state 2  //for body
+heap[size] = xi
+i = size
+size=size+1
+goto Mux(size>0,4,1)
+
+state 4
+//ii = ii + 1
+j = (i - 1) / 2
+x = heap[(i - 1) / 2]
+goto 5
+
+state 5
+xj = x
+goto Mux(x>xi,6,1)
+
+state 6 // swop
+heap[j] =xi
+goto 7
+
+state 7 // swop
+heap[i] =xj
+goto Mux(j>0,8,1)
+
+state 8 // swop
+j = (j - 1) / 2
+i=j
+x = heap[(j - 1) / 2]
+goto 5
+
+
+// end insert into heap
+//---------------------------------
+
+
+state 10
+x=heap[size-1]
+goto 11
+
+state 11
+xi=x
+x=heap[0] // to output
+size=size-1
+goto Mux(size > 0,12,23)
+
+state 12 when out.ready()
+out.write(x)
+xx=x
+heap[0]=xi  // last to front
+heap[size]=x  // clear
+i=0
+j=1
+x=heap[1]
+goto Mux(i>0,13,23)
+
+state 13
+xj=x
+goto Mux(j+1<size,18,Mux(j<size ,14,10))
+
+state 14
+goto  Mux(xj<xi,15,10)
+
+state 15
+heap[i] =xj
+goto 16
+
+state 16
+heap[j] =xi
+j = j*2+1
+i=j
+xj = xi
+goto Mux(j*2+1<size,17,10)
+
+state 17
+x = heap[j]
+goto 13
+
+state 18
+x= heap[j+1]
+goto 19
+
+state 19
+xk=x
+goto Mux(x>xj,14,20)
+
+state 20
+j=j+1
+xj=xk
+goto Mux(xk<xi,15,10)
+
+
+
+state 23 goto 23
+

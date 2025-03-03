@@ -1,0 +1,133 @@
+val heap1 = Module(Heap1)
+
+module Heap1
+
+int[10] heap
+int size = 0
+int ii = 0
+int xi,xj,xk,xx,j,x,i
+
+
+
+//------------------------------------------
+// insert into heap
+state 1 //1000 // 1
+xi = ((83 * ii) + 52) % 101
+ii=ii+1
+goto Mux(ii < 10,2,10)
+
+state 2  //for body
+heap[size] = xi
+i = size
+size=size+1
+goto Mux(size>0,4,1)
+
+state 4
+//ii = ii + 1
+j = (i - 1) / 2
+x = heap[(i - 1) / 2]
+goto 5
+
+state 5
+xj = x
+goto Mux(x>xi,6,1)
+
+state 6 // swop
+heap[j] =xi
+goto 7
+
+state 7 // swop
+heap[i] =xj
+goto Mux(j>0,8,1)
+
+state 8 // swop
+j = (j - 1) / 2
+i=j
+x = heap[(j - 1) / 2]
+goto 5
+
+//state 3  // end program
+//goto 10
+
+// end insert into heap
+//---------------------------------
+
+
+state 10
+x=heap[size-1]
+goto 11
+
+state 11
+xi=x
+x=heap[0] // to output
+size=size-1
+goto Mux(size > 1,12,23)
+
+state 12
+xx=x
+heap[0]=xi  // last to front
+heap[size]=x  // clear
+i=0
+j=1
+x=heap[1]
+goto 13
+
+state 13
+xj=x
+goto Mux(j+1<size,18,Mux(j<size ,14,10))
+
+state 14
+goto  Mux(xj<xi,15,10)
+
+state 15
+heap[i] =xj
+goto 16
+
+state 16
+heap[j] =xi
+j = j*2+1
+i=j
+xj = xi
+goto Mux(j*2+1<size,17,10)
+
+state 17
+x = heap[j]
+goto 13
+
+state 18
+x= heap[j+1]
+goto 19
+
+state 19
+xk=x
+goto Mux(x>xj,14,20)
+
+state 20
+j=j+1
+xj=xk
+goto Mux(xk<xi,15,10)
+
+
+
+state 23 goto 23
+
+
+
+/*
+
+state 1000
+
+heap[0] = 9
+heap[1] = 16
+heap[2] = 34
+heap[3] = 27
+heap[4] = 81
+heap[5] = 63
+heap[6] = 45
+heap[7] = 99
+heap[8] = 52
+heap[9] = 92
+size= 10
+
+goto 10
+*/
