@@ -9,8 +9,6 @@ state 1
 i = 0
 goto 2
 state 2
-goto 3
-state 3
 goto 4
 state 4 when out.ready()
 out.write(i)
@@ -20,16 +18,16 @@ state 5
 goto 5
 
 module Receiver
-int x, j
+int x, j, y
 instream in
 state 1
 j = 0
 goto 2
 state 2 when in.valid()
+j = j +1
 x = in.read()
 goto 3
 state 3
-j = j + x
 goto Mux(x < 5, 2, 4)
 state 4
 goto 4

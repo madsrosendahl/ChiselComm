@@ -2,16 +2,12 @@
 // as described by the constructors in the AbsSyn file
 // most of the
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 
 public class PrettyPrint {
   public static void main(String[] args) {
-    Design d=Parser.parser("src\\in\\prog9.txt");
-    String t="src\\out\\tmp.txt";
-    PrettyPrint.prettyprint(d,t);
-    for(String s:InOut.readfile(t)) System.out.println(s);
+    Design d=Parser.parseDesign("in\\prog9.txt");
+    PrettyPrint.prettyprint(d);
   }
 
   //-------------------------
@@ -23,7 +19,7 @@ public class PrettyPrint {
   }
   public static void prettyprint( Design d,String f){
     PrettyPrint p=new PrettyPrint();
-    PrintStream out=InOut.outfile(f);
+    PrintStream out=outfile(f);
     p.pp(out,d);
     out.close();
   }
@@ -63,5 +59,20 @@ public class PrettyPrint {
 
   private void pp(PrintStream out,Stat s){
     out.println("  "+s);
+  }
+
+  //-----------------------------------
+  public static PrintStream outfile(String f){
+    try{ return new PrintStream(new FileOutputStream(f));
+    }catch(IOException e){
+      System.out.println(e);
+      return null;
+    }
+  }
+  public static BufferedReader infile(String f){
+    try { return new BufferedReader(new FileReader(f));
+    }catch(IOException e){
+      return null;
+    }
   }
 }

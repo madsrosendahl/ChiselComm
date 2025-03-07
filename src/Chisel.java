@@ -4,7 +4,7 @@ import java.util.*;
 public class Chisel{
   public static void main(String[] args) {
     System.out.println("Hello");
-    Design d=Parser.parseDesign("src\\in\\prog8.txt");
+    Design d=Parser.parseDesign("in\\prog8.txt");
     Chisel.toChisel(d,"Main8");
   }
 

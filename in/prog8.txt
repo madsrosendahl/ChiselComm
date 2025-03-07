@@ -16,16 +16,15 @@ state 3
 goto 3
 
 module Receiver
-int x, j
+int x, y, j
 instream in
 state 1
 j = 0
 goto 2
 state 2 when in.valid()
+y = Mux(x>y,y,x)
 x = in.read()
-goto 3
+j = j+1
+goto Mux(j < 5, 2, 3)
 state 3
-j = j + x
-goto Mux(x < 5, 2, 4)
-state 4
-goto 4
+goto 3
